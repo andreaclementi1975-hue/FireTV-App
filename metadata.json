@@ -1,0 +1,6 @@
+{
+  "name": "Fire TV Canali",
+  "description": "App di canali sportivi in streaming per Amazon Fire TV Stick con telecomando e ad-block.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
