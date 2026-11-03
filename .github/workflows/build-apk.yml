@@ -14,6 +14,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Find Android project
+        id: project
+        run: |
+          PROJECT_DIR=$(find . -type f \
+            \( -name settings.gradle -o -name settings.gradle.kts \) \
+            -not -path '*/.gradle/*' \
+            -printf '%h\n' | head -n 1)
+
+          if [ -z "$PROJECT_DIR" ]; then
+            echo "ERRORE: progetto Gradle non trovato."
+            echo "Contenuto repository:"
+            find . -maxdepth 3 -type f | head -100
+            exit 1
+          fi
+
+          echo "dir=$PROJECT_DIR" >> "$GITHUB_OUTPUT"
+          echo "Progetto trovato: $PROJECT_DIR"
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -22,14 +40,23 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
 
       - name: Build APK
+        working-directory: ${{ steps.project.outputs.dir }}
         run: |
-          chmod +x ./gradlew
-          ./gradlew --no-daemon assembleDebug
+          if [ -f ./gradlew ]; then
+            chmod +x ./gradlew
+            ./gradlew --no-daemon assembleDebug
+          else
+            gradle --no-daemon assembleDebug
+          fi
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: FireTV-APK
-          path: app/build/outputs/apk/debug/*.apk
+          path: '**/build/outputs/apk/debug/*.apk'
+          if-no-files-found: error
+
