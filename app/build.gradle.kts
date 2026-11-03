@@ -7,8 +7,8 @@ plugins {
 }
 
 android {
-  namespace = "com.example"
-  compileSdk = 36
+  namespace = "com.example.firetvchannels"
+  compileSdk = 34
 
   defaultConfig {
     applicationId = "com.aistudio.firetvchannels.qkrz"

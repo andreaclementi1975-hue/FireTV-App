@@ -1,4 +1,4 @@
-package com.example
+package com.example.firetvchannels
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -483,7 +483,7 @@ class MainActivity : Activity() {
     private fun loadRemoteChannels() {
         if (loadingList) return
         loadingList = true
-        statusText.text = "Aggiornamento lista canali…"
+        statusText.text = "Aggiornamento lista canali..."
         Thread {
             val remote: List<Channel> = try {
                 parseChannels(downloadText(REMOTE_LIST_URL))

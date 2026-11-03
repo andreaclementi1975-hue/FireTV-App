@@ -1,4 +1,4 @@
-package com.example
+package com.example.firetvchannels
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
