@@ -13,17 +13,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Find Android project directory
-        id: project
-        run: |
-          # Cerca la cartella che contiene il progetto Android
-          PROJECT_DIR=$(dirname $(find . -name "settings.gradle*" | head -n 1))
-          if [ -z "$PROJECT_DIR" ]; then
-            PROJECT_DIR="."
-          fi
-          echo "dir=$PROJECT_DIR" >> $GITHUB_OUTPUT
-          echo "Directory trovata: $PROJECT_DIR"
-
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -33,20 +22,11 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
-          # Versione di fallback valida nel caso manchi il file gradlew
           gradle-version: '8.7'
 
       - name: Build APK
-        working-directory: ${{ steps.project.outputs.dir }}
         run: |
-          if [ -f "gradlew" ]; then
-            echo "Uso Gradle Wrapper locale"
-            chmod +x gradlew
-            ./gradlew --no-daemon assembleDebug
-          else
-            echo "Gradle Wrapper non trovato, uso Gradle globale"
-            gradle --no-daemon assembleDebug
-          fi
+          gradle --no-daemon assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
