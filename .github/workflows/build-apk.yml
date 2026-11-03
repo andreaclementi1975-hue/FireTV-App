@@ -44,14 +44,10 @@ jobs:
           gradle-version: '9.3.1'
 
       - name: Build APK
-        working-directory: ${{ steps.project.outputs.dir }}
-        run: |
-          if [ -f ./gradlew ]; then
-            chmod +x ./gradlew
-            ./gradlew --no-daemon assembleDebug
-          else
-            gradle --no-daemon assembleDebug
-          fi
+  working-directory: ${{ steps.project.outputs.dir }}
+  run: |
+    gradle --no-daemon --no-configuration-cache assembleDebug
+      
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
